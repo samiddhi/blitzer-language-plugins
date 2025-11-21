@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blitzer-language-pli"
+version = "0.0.2"
+description = "Pali language pack for blitzer-cli"
+authors = [{name = "Samiddhi"}]
+license = "CC-BY-NC-4.0"
+requires-python = ">=3.7"
+
+[project.entry-points."blitzer.languages"]
+pli = "blitzer_language_pli:register"
+
+[tool.setuptools.packages.find]
+include = ["blitzer_language_pli"]
+
+[tool.setuptools.package-data]
+blitzer_language_pli = ["lemmas.db"]
