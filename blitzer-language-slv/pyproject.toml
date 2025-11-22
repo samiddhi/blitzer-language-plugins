@@ -10,7 +10,6 @@ authors = [{name = "Samiddhi"}]
 license = "GPL-3.0-or-later"
 requires-python = ">=3.7"
 dependencies = [
-    "requests>=2.25.0"
 ]
 
 [project.entry-points."blitzer.languages"]
@@ -18,3 +17,6 @@ slv = "blitzer_language_slv:register"
 
 [tool.setuptools.packages.find]
 include = ["blitzer_language_slv"]
+
+[tool.setuptools.package-data]
+blitzer_language_slv = ["*.db*"]
