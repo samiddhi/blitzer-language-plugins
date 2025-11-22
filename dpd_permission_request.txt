@@ -1,0 +1,13 @@
+Subject: Request for Permission to Use DPD Data in GPL Project
+
+Dear Digital Pāḷi Dictionary Team,
+
+I am developing a GPL-licensed CLI tool for language learning that uses Pāḷi lemmatization. I currently use a subset of DPD data (word-form to lemma mappings) in my blitzer-language-pli plugin, which is licensed under CC BY-NC 4.0 as permitted by your license.
+
+I would like to incorporate this same data directly into my main GPL-licensed project. Since CC BY-NC 4.0 and GPL have compatibility issues, would you grant permission to use this subset under GPL terms for this educational purpose?
+
+Thank you for considering my request and for your valuable contribution to Pāḷi studies.
+
+Respectfully,
+[Your name]
+[Your contact information]

@@ -6,7 +6,6 @@ This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 I
 To view a copy of this license, visit https://creativecommons.org/licenses/by-nc/4.0/.
 """
 
-import re
 from pathlib import Path
 
 
@@ -18,10 +17,38 @@ def normalizer_func(text: str) -> str:
     return text.replace("ṁ", "ṃ").replace("'", "").replace("”", "").replace("’", "")
 
 
+def _get_db_path():
+    """Get the path to the lemmas.db file, downloading it if necessary."""
+    # Import requests here to ensure it's available
+    import requests
+    
+    # Use a cache directory in user's home folder
+    cache_dir = Path.home() / ".blitzer_language_pli"
+    cache_dir.mkdir(exist_ok=True)
+    db_path = cache_dir / "lemmas.db"
+    
+    if not db_path.exists():
+        print(f"Downloading Pali lemmas database to {db_path}...")
+        url = "https://github.com/samiddhi/blitzer-language-plugins/releases/download/v1-pli-db/lemmas.db"
+        
+        try:
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
+            
+            with open(db_path, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            
+            print("Download completed successfully.")
+        except Exception as e:
+            raise RuntimeError(f"Failed to download Pali lemmas database: {e}")
+    
+    return str(db_path)
+
+
 def register():
     """Register function that returns language configuration."""
-    # For now, using a dummy database path - in a real plugin this would be the actual lemmas.db
-    db_path = str(Path(__file__).parent / "lemmas.db")
+    db_path = _get_db_path()
     
     return {
         "db_path": db_path,
