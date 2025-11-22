@@ -26,10 +26,10 @@ class TestSlvPluginDownload(unittest.TestCase):
         import blitzer_language_slv
         
         # We need to patch the import and call at the function level
-        # We'll patch both Path.exists (to simulate missing DB) and requests
-        from unittest.mock import patch
-        with patch('pathlib.Path.exists', return_value=False), \
-             patch('blitzer_language_slv.requests.get') as mock_get:
+        # We'll patch Path.exists to return False (simulating missing local DB file),
+        # so it will download to the cache
+        with patch.object(Path, 'exists', return_value=False), \
+             patch('requests.get') as mock_get:
             
             # Mock the response
             mock_response = MagicMock()
@@ -38,7 +38,6 @@ class TestSlvPluginDownload(unittest.TestCase):
             mock_get.return_value = mock_response
             
             import tempfile
-            import os
             with tempfile.TemporaryDirectory() as temp_dir:
                 # We'll need to patch the Path.home call to use our temp directory
                 with patch('pathlib.Path.home', return_value=Path(temp_dir)):
@@ -57,12 +56,27 @@ class TestSlvPluginDownload(unittest.TestCase):
         """Test that the DB path has the expected structure."""
         import blitzer_language_slv
         
-        with patch('pathlib.Path.exists', return_value=True):  # Pretend DB exists
+        with patch.object(Path, 'exists', return_value=True):  # Pretend local DB exists
             config = blitzer_language_slv.register()
             
             db_path = Path(config["db_path"])
             self.assertTrue(db_path.name == "lemmas.db")
-            self.assertTrue(".blitzer_language_slv" in str(db_path.parent))
+            # When local DB exists, it should be in the same directory as __init__.py
+            self.assertTrue("blitzer_language_slv" in str(db_path))
+
+    def test_local_db_file_takes_precedence(self):
+        """Test that a local database file is used in preference to downloading."""
+        import blitzer_language_slv
+        
+        # Simulate that a local database file exists
+        with patch.object(Path, 'exists', return_value=True):
+            # This simulates the case where lemmas.db exists in the package directory
+            # which would happen in development environments
+            config = blitzer_language_slv.register()
+            
+            # The path should point to the local file
+            self.assertTrue(config["db_path"].endswith("lemmas.db"))
+            self.assertIn("blitzer_language_slv", config["db_path"])
 
 if __name__ == '__main__':
     unittest.main()

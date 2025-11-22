@@ -4,12 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "blitzer-language-slv"
-version = "0.0.2"
+version = "0.0.4"
 description = "Slovenian language pack for blitzer-cli"
 authors = [{name = "Samiddhi"}]
 license = "GPL-3.0-or-later"
 requires-python = ">=3.7"
 dependencies = [
+    "requests"
 ]
 
 [project.entry-points."blitzer.languages"]
@@ -18,5 +19,3 @@ slv = "blitzer_language_slv:register"
 [tool.setuptools.packages.find]
 include = ["blitzer_language_slv"]
 
-[tool.setuptools.package-data]
-blitzer_language_slv = ["*.db*"]
